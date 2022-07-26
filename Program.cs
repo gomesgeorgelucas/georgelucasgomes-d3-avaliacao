@@ -1,10 +1,12 @@
-﻿namespace georgelucasgomes_d3_avaliacao
+﻿using georgelucasgomes_d3_avaliacao.Views;
+
+namespace georgelucasgomes_d3_avaliacao
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            new ConsoleView().Init();
         }
     }
 }
