@@ -20,7 +20,7 @@ namespace georgelucasgomes_d3_avaliacao.Domain.Repositories
             //Auto manage resources (open, close)
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string querySelectAll = "SELECT name_user, email_user from tb_users where password_user = @password_user and email_user = @email_user";
+                string querySelectAll = "SELECT id_user, name_user, email_user from tb_users where password_user = @password_user and email_user = @email_user";
 
                 SqlDataReader reader;
 
@@ -36,6 +36,7 @@ namespace georgelucasgomes_d3_avaliacao.Domain.Repositories
                     {
                         storedUser = new User()
                         {
+                            UserId = Guid.Parse(reader["id_user"].ToString()),
                             UserName = reader["name_user"].ToString(),
                             UserEmail = reader["email_user"].ToString()
                         };

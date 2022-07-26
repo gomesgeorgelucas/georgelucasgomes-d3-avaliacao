@@ -6,8 +6,9 @@ namespace georgelucasgomes_d3_avaliacao.Views
 {
     internal class ConsoleView
     {
-        private LoginController loginController = new LoginController();    
-
+        private LoginController loginController = new LoginController();
+        private LogController logController = new LogController();
+        private bool loginFail = false;
         private readonly short _displaySize = 112;
         public void Init()
         {
@@ -23,7 +24,9 @@ namespace georgelucasgomes_d3_avaliacao.Views
             Console.WriteLine(Messages.MAIN_MENU_OPTION_LOGIN);
             Console.WriteLine(Messages.MAIN_MENU_OPTION_EXIT);
             Console.WriteLine(Images.DIVIDER);
-            
+            Console.WriteLine("Not Logged in");
+
+
 
             if (hasInputError)
             {
@@ -33,7 +36,6 @@ namespace georgelucasgomes_d3_avaliacao.Views
             {
                 Console.Write(Images.PROMPT);
             }
-
         }
 
         private void ShowMenuLogin(Boolean hasInputError)
@@ -41,6 +43,7 @@ namespace georgelucasgomes_d3_avaliacao.Views
             Console.Clear();
 
             Console.WriteLine(Images.LOGO);
+
             Console.WriteLine(Messages.MAIN_MENU_LOGIN_TITLE + "---" + Messages.MENU_LOGIN_LOGGED_IN + new string('-', (_displaySize - (Messages.MAIN_MENU_LOGIN_TITLE.Length + Messages.MENU_LOGIN_LOGGED_IN.Length + 3))));
             Console.WriteLine(Messages.LOGIN_MENU_OPTION_LOGOUT);
             Console.WriteLine(Images.DIVIDER);
@@ -89,7 +92,9 @@ namespace georgelucasgomes_d3_avaliacao.Views
 
                         if (LoginController.IsLogged)
                         {
-                            Console.WriteLine("Usuário logado com sucesso");
+                            loginFail = false;
+                           Console.WriteLine("Usuário logado com sucesso");
+                            logController.registeLogin(LoginController.LoggedUser);
 
                             string inputLogin = "";
                             Boolean inputErrorLogin = false;
@@ -111,7 +116,8 @@ namespace georgelucasgomes_d3_avaliacao.Views
                                 switch(inputLogin)
                                 {
                                     case "b":
-                                        LoginController.IsLogged = false;
+                                        logController.registerLogout(LoginController.LoggedUser);
+                                        loginController.UserLogout();
                                         break;
                                     default:
                                         inputError = true;
@@ -120,12 +126,12 @@ namespace georgelucasgomes_d3_avaliacao.Views
                             }
                         } else {
                             Console.WriteLine("Login inválido! Tente novamente!");
+                            loginFail = true;
                         }
 
                         break;
 
                     case "x":
-                        break;
                     default:
                         inputError = true;
                         break;
