@@ -16,7 +16,7 @@ namespace georgelucasgomes_d3_avaliacao.Views
 
         private void ShowMainMenu(Boolean hasInputError)
         {
-            //Console.Clear();
+            Console.Clear();
 
             Console.WriteLine(Images.LOGO);
             Console.WriteLine(Messages.MAIN_MENU_LOGIN_TITLE + new string('-', (_displaySize - Messages.MAIN_MENU_LOGIN_TITLE.Length)));
@@ -36,10 +36,32 @@ namespace georgelucasgomes_d3_avaliacao.Views
 
         }
 
+        private void ShowMenuLogin(Boolean hasInputError)
+        {
+            Console.Clear();
+
+            Console.WriteLine(Images.LOGO);
+            Console.WriteLine(Messages.MAIN_MENU_LOGIN_TITLE + "---" + Messages.MENU_LOGIN_LOGGED_IN + new string('-', (_displaySize - (Messages.MAIN_MENU_LOGIN_TITLE.Length + Messages.MENU_LOGIN_LOGGED_IN.Length + 3))));
+            Console.WriteLine(Messages.LOGIN_MENU_OPTION_LOGOUT);
+            Console.WriteLine(Images.DIVIDER);
+
+
+            if (hasInputError)
+            {
+                Console.Write(Messages.MAIN_MENU_OPTION_INVALID + " " + Images.PROMPT);
+            }
+            else
+            {
+                Console.Write(Images.PROMPT);
+            }
+
+        }
+
         private void MainMenuLoop()
         {
             string input = "";
             Boolean inputError = false;
+
 
             do
             {
@@ -68,6 +90,34 @@ namespace georgelucasgomes_d3_avaliacao.Views
                         if (LoginController.IsLogged)
                         {
                             Console.WriteLine("Usuário logado com sucesso");
+
+                            string inputLogin = "";
+                            Boolean inputErrorLogin = false;
+
+                            while (LoginController.IsLogged)
+                            {   
+                                ShowMenuLogin(inputErrorLogin);
+                                inputErrorLogin = false;
+
+                                try
+                                {
+                                    inputLogin = Console.ReadLine().ToLower();
+                                }
+                                catch (Exception err)
+                                {
+                                    throw new IOException(err.Message);
+                                }
+
+                                switch(inputLogin)
+                                {
+                                    case "b":
+                                        LoginController.IsLogged = false;
+                                        break;
+                                    default:
+                                        inputError = true;
+                                        break;
+                                }
+                            }
                         } else {
                             Console.WriteLine("Login inválido! Tente novamente!");
                         }
