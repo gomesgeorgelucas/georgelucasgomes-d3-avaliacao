@@ -1,37 +1,51 @@
-﻿using georgelucasgomes_d3_avaliacao.Views.Assets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using georgelucasgomes_d3_avaliacao.Controllers;
+using georgelucasgomes_d3_avaliacao.Views.Assets;
+
 
 namespace georgelucasgomes_d3_avaliacao.Views
 {
     internal class ConsoleView
     {
+        private LoginController loginController = new LoginController();    
+
         private readonly short _displaySize = 112;
         public void Init()
         {
             this.MainMenuLoop();
         }
 
-        private void ShowMainMenu()
+        private void ShowMainMenu(Boolean hasInputError)
         {
+            //Console.Clear();
+
             Console.WriteLine(Images.LOGO);
             Console.WriteLine(Messages.MAIN_MENU_LOGIN_TITLE + new string('-', (_displaySize - Messages.MAIN_MENU_LOGIN_TITLE.Length)));
             Console.WriteLine(Messages.MAIN_MENU_OPTION_LOGIN);
             Console.WriteLine(Messages.MAIN_MENU_OPTION_EXIT);
             Console.WriteLine(Images.DIVIDER);
-            Console.Write(Images.PROMPT);
+            
+
+            if (hasInputError)
+            {
+                Console.Write(Messages.MAIN_MENU_OPTION_INVALID + " " + Images.PROMPT);
+            }
+            else
+            {
+                Console.Write(Images.PROMPT);
+            }
+
         }
 
         private void MainMenuLoop()
         {
             string input = "";
+            Boolean inputError = false;
 
             do
             {
-                ShowMainMenu();
+                ShowMainMenu(inputError);
+                inputError = false;
+
                 try
                 {
                     input = Console.ReadLine().ToLower();
@@ -44,12 +58,26 @@ namespace georgelucasgomes_d3_avaliacao.Views
                 switch (input)
                 {
                     case "l":
-                        Console.Clear();
+                        Console.Write("Inserir email:");
+                        string user_email = Console.ReadLine();
+                        Console.Write("Inserir senha:");
+                        string user_password = Console.ReadLine();
+
+                        LoginController.IsLogged = loginController.UserLogin(user_email, user_password);
+
+                        if (LoginController.IsLogged)
+                        {
+                            Console.WriteLine("Usuário logado com sucesso");
+                        } else {
+                            Console.WriteLine("Login inválido! Tente novamente!");
+                        }
+
                         break;
+
                     case "x":
                         break;
                     default:
-                        Console.Clear();
+                        inputError = true;
                         break;
                 }
 
