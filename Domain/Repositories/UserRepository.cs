@@ -11,7 +11,7 @@ namespace georgelucasgomes_d3_avaliacao.Domain.Repositories
 {
     internal class UserRepository : IUser
     {
-        private readonly string connectionString = "Data source=ACCT-WS; initial catalog=georgelucasgomes_d3_avaliacao; user=sa; pwd=#Minhabenga15;";
+        private readonly string connectionString = "Data source=ACCT-WS; initial catalog=georgelucasgomes_d3_avaliacao; user=sa; pwd=mudar_senha;";
 
         public User UserLogin(string email, string password)
         {
