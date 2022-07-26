@@ -1,51 +1,48 @@
-﻿using georgelucasgomes_d3_avaliacao.Domain.Interfaces;
-using georgelucasgomes_d3_avaliacao.Domain.Models;
+﻿using georgelucasgomes_d3_avaliacao.Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace georgelucasgomes_d3_avaliacao.Domain.Repositories
 {
-    internal class LogRepository : ILog
+    internal class LogRepository : Base
     {
-        private const string path = "database/log.txt";
-        private readonly FileStream fileStream;
+        private string path = "database/log.csv";
 
         public LogRepository()
         {
             CreateFolderAndFile(path);
-            fileStream = File.OpenWrite(path);
-        }
-
-        public LogRepository(FileStream fileStream)
-        {
-            CreateFolderAndFile(path);
-            this.fileStream = fileStream;
         }
 
         private static string PrepareLine(User user)
         {
-            return $"{DateTime.Now} - O usuário: {user.UserName} ({user.UserEmail}) está acessando dados do banco.\n";
+            return $"{DateTime.Now} - O usuário ({user.UserId}): {user.UserName} - {user.UserEmail} -  está logado.\n";
         }
 
-        public static void CreateFolderAndFile(string path)
+        private static string PrepareLine(User user, Boolean logout)
         {
-            string folder = path.Split('/')[0];
-
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-
-            if (!File.Exists(path))
-            {
-                File.Create(path).Close();
-            }
+            return $"{DateTime.Now} - O usuário ({user.UserId}): {user.UserName} - {user.UserEmail} -  foi deslogado.\n";
         }
 
-        public void RegisterAccess(User user)
+        public void Create(User user)
         {
-            string line = PrepareLine(user);
-            byte[] info = new UTF8Encoding().GetBytes(line);
-            fileStream.Write(info);
+            string[] line = { PrepareLine(user) };
+            File.AppendAllLines(path, line);
+        }
+
+        public void Create(User user, Boolean logout)
+        { 
+            string[] line = { PrepareLine(user, logout) };
+            File.AppendAllLines(path, line);
+        }
+
+        public void Delete(string idProduct)
+        {
+            List<string> lines = ReadAllLinesCSV(path);
+            lines.RemoveAll(x => x.Split(";")[0] == idProduct);
+            RewriteCSV(path, lines);
         }
     }
 }
